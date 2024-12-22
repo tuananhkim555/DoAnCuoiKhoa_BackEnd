@@ -13,6 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id        Int       @id @default(autoincrement())
   name      String
@@ -21,7 +26,7 @@ model User {
   phone     String?
   birthday  String?
   gender    String?
-  role      String?
+  role       Role?     @default(USER)
   avatar   String?
   status    Int       @default(1)
   createdAt DateTime  @default(now())

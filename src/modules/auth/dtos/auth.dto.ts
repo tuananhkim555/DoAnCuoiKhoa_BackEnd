@@ -20,12 +20,17 @@ export class RegisterDto {
   @MinLength(6)
   password: string;
 
-  status: number;
+  @IsNotEmpty()
+  birthday: string;
 
+  @IsOptional()
   gender: string;
 
   @IsOptional() // Make role optional
   role?: string; // Use optional chaining
+
+  @IsNotEmpty()
+  status: number;
 }
 
 export class LoginDto {

@@ -1,7 +1,7 @@
 import { PrismaService } from '../../prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RegisterDto } from './dtos/auth.dto';
-import { User } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import { hash, compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -13,13 +13,16 @@ export class AuthService {
   ) {}
 
   register = async (userData: RegisterDto): Promise<User> => {
+    // Add logging to debug password hashing
+    console.log('Original password:', userData.password);
+    
     // bước 1: kiểm tra xem email đã được sử dụng chưa
     const user = await this.prismaService.user.findUnique({
       where: {
         email: userData.email,
       },
     });
-
+    
     if (user) {
       throw new HttpException(
         { message: 'Email này đã được sử dụng.' },
@@ -45,15 +48,21 @@ export class AuthService {
 
     // bước 2: mã hóa mật khẩu và lưu vào db
     const hashPassword = await hash(userData.password, 10);
+    console.log('Hashed password:', hashPassword);
 
     const res = await this.prismaService.user.create({
       data: {
         ...userData,
         password: hashPassword,
         gender: userData.gender,
-        role: userData.role,
+        role: userData.role as Role,
       },
     });
+
+    // Verify the hash worked
+    const verifyHash = await compare(userData.password, res.password);
+    console.log('Hash verification:', verifyHash);
+
     return res;
   };
 

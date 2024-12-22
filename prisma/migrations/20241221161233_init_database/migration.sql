@@ -6,8 +6,10 @@ CREATE TABLE `User` (
     `password` VARCHAR(191) NOT NULL,
     `phone` VARCHAR(191) NULL,
     `birthday` VARCHAR(191) NULL,
-    `gender` BOOLEAN NOT NULL,
-    `role` VARCHAR(191) NOT NULL,
+    `gender` VARCHAR(191) NULL,
+    `role` ENUM('USER', 'ADMIN') NULL DEFAULT 'USER',
+    `avatar` VARCHAR(191) NULL,
+    `status` INTEGER NOT NULL DEFAULT 1,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NULL,
 
