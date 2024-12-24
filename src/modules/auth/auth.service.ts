@@ -1,7 +1,7 @@
-import { PrismaService } from '../../prisma.service';
+import { PrismaService } from '../../common/prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RegisterDto } from './dtos/auth.dto';
-import { Role, User } from '@prisma/client';
+import { Gender, Role, User } from '@prisma/client';
 import { hash, compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -13,8 +13,6 @@ export class AuthService {
   ) {}
 
   register = async (userData: RegisterDto): Promise<User> => {
-    // Add logging to debug password hashing
-    console.log('Original password:', userData.password);
     
     // bước 1: kiểm tra xem email đã được sử dụng chưa
     const user = await this.prismaService.user.findUnique({
@@ -54,7 +52,7 @@ export class AuthService {
       data: {
         ...userData,
         password: hashPassword,
-        gender: userData.gender,
+        gender: userData.gender as Gender,
         role: userData.role as Role,
       },
     });

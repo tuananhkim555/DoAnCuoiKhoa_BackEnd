@@ -1,66 +1,36 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { LoginDto, RegisterDto } from './dtos/auth.dto';
+import {  LoginDto, RegisterDto } from './dtos/auth.dto';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiProperty, ApiPropertyOptional, ApiResponse } from '@nestjs/swagger';
-class dataRegister {
-    @ApiProperty()
-    name: string;
 
-    @ApiProperty()
-    email: string;
-  
-    @ApiProperty()
-    password: string;
-
-    @ApiProperty()
-    phone: string;
-
-    @ApiProperty()
-    birthday: string;
-
-    @ApiPropertyOptional()
-    gender: string;
-  
-    @ApiPropertyOptional() // Make role optional
-    role?: string; // Use optional chaining
-
-}
-
-class dataLogin {
-    @ApiProperty()
-    email: string;
-
-    @ApiProperty()
-    password: string;
-}
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
   
   
   @ApiBody({
-    type:dataRegister
+    type:RegisterDto
   })
   @Post('register')
   @ApiResponse({
     status: 200,
     description: 'Success',
   })
-  register(@Body() body: RegisterDto): Promise<User> {
-    return this.authService.register(body);
+  register(@Body() registerDto: RegisterDto): Promise<User> {
+    return this.authService.register(registerDto);
   }
 
 
   @ApiBody({
-    type: dataLogin
+    type: LoginDto
   })
   @Post('login')
   @ApiResponse({
     status: 200,
     description: 'Success',
   })
-  login(@Body() body: LoginDto): Promise<any> {
-    return this.authService.login(body);
+  login(@Body() loginDto: LoginDto): Promise<any> {
+    return this.authService.login(loginDto);
   }
 }

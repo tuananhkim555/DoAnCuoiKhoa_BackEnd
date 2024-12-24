@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
@@ -7,37 +8,48 @@ import {
 } from 'class-validator';
 
 export class RegisterDto {
+  @ApiProperty()
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty()
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
   @Matches(/^\d+$/)
   phone: string;
 
-  @IsEmail()
-  email: string;
-
+  @ApiProperty()
   @IsNotEmpty()
   @MinLength(6)
   password: string;
 
+  @ApiProperty()
   @IsNotEmpty()
-  birthday: string;
-
   @IsOptional()
-  gender: string;
+  birthday?: string;
 
-  @IsOptional() // Make role optional
-  role?: string; // Use optional chaining
+  @ApiPropertyOptional()
+  @IsOptional()
+  gender?: string;
 
-  @IsNotEmpty()
-  status: number;
+  @ApiPropertyOptional()
+  @IsOptional()
+  role?: string;
+
 }
 
 export class LoginDto {
+  @ApiProperty()
   @IsEmail()
   email: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   @MinLength(6)
   password: string;
 }
+
