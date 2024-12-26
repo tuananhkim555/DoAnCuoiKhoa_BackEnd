@@ -2,7 +2,8 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { User } from '@prisma/client';
 import {  LoginDto, RegisterDto } from './dtos/auth.dto';
 import { AuthService } from './auth.service';
-import { ApiBody, ApiProperty, ApiPropertyOptional, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ResponseMessage } from 'src/common/decorater/response-message.decorator';
 
 @Controller('api/auth')
 export class AuthController {
@@ -30,6 +31,7 @@ export class AuthController {
     status: 200,
     description: 'Success',
   })
+  @ResponseMessage(`Đăng nhập thành công`)
   login(@Body() loginDto: LoginDto): Promise<any> {
     return this.authService.login(loginDto);
   }

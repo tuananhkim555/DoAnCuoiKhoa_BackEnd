@@ -1,11 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, BadRequestException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto, UserFilterDto, UserNameSearchDto } from './dto/users.dto';
 import * as bcrypt from 'bcrypt';
 import { Gender, Role, User } from '@prisma/client';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { responseSuccess } from 'src/common/helpers/response.helper';
 
 declare module 'express' {
     interface Request {
@@ -17,7 +16,7 @@ declare module 'express' {
 export class UsersService {
     constructor(
         private prisma: PrismaService,
-        private readonly jwtService: JwtService
+        private jwtService: JwtService,
     ) {}
 
     //Get all users
@@ -186,8 +185,36 @@ export class UsersService {
     }
   
     //Upload avatar
-    uploadAvatar = async (file: Express.Multer.File) => {
-          console.log({ file });
-          return `uploadAvatarLocal`;
+    uploadAvatar = async (file: Express.Multer.File, userId: number) => {
+        if (!file) {
+            throw new BadRequestException('No file uploaded');
         }
+
+        try {
+            const avatarUrl = `uploads/avatars/${file.filename}`;
+            
+            const updatedUser = await this.prisma.user.update({
+                where: { id: userId },
+                data: {
+                    avatar: avatarUrl,
+                    updatedAt: new Date(),
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    avatar: true,
+                },
+            });
+
+            return {
+                message: 'Avatar uploaded successfully',
+                user: updatedUser,
+            };
+        } catch (error) {
+            console.error('Upload avatar error:', error);
+            throw new BadRequestException('Failed to update avatar');
+        }
+    }
 }
+    

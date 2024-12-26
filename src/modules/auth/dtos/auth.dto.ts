@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
+  IsString,
   Matches,
   MinLength,
 } from 'class-validator';
@@ -44,10 +45,12 @@ export class RegisterDto {
 
 export class LoginDto {
   @ApiProperty()
-  @IsEmail()
+  @IsString({ message: `Email phải là string` })
+  @IsEmail(undefined, { message: `Email chưa hợp lệ` })
   email: string;
 
   @ApiProperty()
+  @IsString({ message: `Password phải là string` })
   @IsNotEmpty()
   @MinLength(6)
   password: string;

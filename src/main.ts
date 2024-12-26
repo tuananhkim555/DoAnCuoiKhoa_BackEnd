@@ -12,7 +12,6 @@ async function bootstrap() {
     .addBearerAuth(
       {
         type: 'http',
-        scheme: 'bearer',
         bearerFormat: 'JWT',
         name: 'JWT',
         description: 'Enter JWT token',

@@ -12,7 +12,6 @@ import {
   Req,
   ParseIntPipe,
   UseGuards,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
@@ -20,7 +19,6 @@ import {
   CreateUserDto,
   UpdateUserDto,
   UserFilterDto,
-  UserNameSearchDto,
   UploadAvatarDto,
 } from './dto/users.dto';
 import { Request as ExpressRequest } from 'express';
@@ -28,7 +26,6 @@ import {
   ApiBody,
   ApiResponse,
   ApiQuery,
-  ApiParam,
   ApiConsumes,
   ApiBearerAuth,
   ApiHeader,
@@ -120,14 +117,10 @@ export class UsersController {
     return this.userService.searchUsers({ name: TenNguoiDung });
   }
 
-  //Upload avatar
+  //Upload avatar local
   @Post('avatar-local')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ description: 'Success' })
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Bearer {JWT token}',
-    required: true,
-  })
   @UseInterceptors(FileInterceptor('avatar', { storage: storageLocal }))
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadAvatarDto })
@@ -135,16 +128,18 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
     @Req() req: RequestWithUser
   ) {
-    return this.userService.uploadAvatar(file);
+    return this.userService.uploadAvatar(file, req.user.id);
   }
 
+  //Upload avatar cloud
   @Post('avatar-cloud')
-  @ApiResponse({ description: 'Success' })
+  @UseGuards(JwtAuthGuard)
   @ApiHeader({
-    name: 'Authorization',
-    description: 'Bearer {JWT token}',
+    name: 'accessToken',
     required: true,
+    description: 'Access token for authentication'
   })
+  @ApiResponse({ description: 'Success' })
   @UseInterceptors(FileInterceptor('avatar', { storage: storageCloud }))
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadAvatarDto })
@@ -152,6 +147,7 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
     @Req() req: RequestWithUser
   ) {
-    return this.userService.uploadAvatar(file);
+    return this.userService.uploadAvatar(file, req.user.id);
   }
+
 }

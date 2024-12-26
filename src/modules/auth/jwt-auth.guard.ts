@@ -31,8 +31,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     console.log(`handleRequest`);
     console.log({ err, user, info });
 
-    if (info instanceof TokenExpiredError) throw new ForbiddenException();
-    if (info instanceof JsonWebTokenError) throw new UnauthorizedException();
+    if (info instanceof TokenExpiredError) throw new ForbiddenException({statusCode: 403, message: 'Token hết hạn'});
+    if (info instanceof JsonWebTokenError) throw new UnauthorizedException({statusCode: 401, message: 'Token không hợp lệ'});
 
     return user;
   }
