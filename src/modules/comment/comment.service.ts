@@ -41,15 +41,26 @@ return {
   };
 
   // Tạo bình luận
-  async createComment(createCommentDto: CreateCommentDto, req: Request) {
+  createComment = async (createCommentDto: CreateCommentDto, req: Request) => {
     // Kiểm tra user tồn tại
     const userExists = await this.prisma.user.findUnique({
       where: { id: createCommentDto.maNguoiBinhLuan }
     });
 
+    const roomExists = await this.prisma.room.findUnique({
+      where: { id: createCommentDto.maPhong }
+    });
+
+    if (!roomExists) {
+      throw new HttpException(
+        { statusCode: 404, message: 'Room không tồn tại' },
+        HttpStatus.NOT_FOUND
+      );
+    }
+
     if (!userExists) {
       throw new HttpException(
-        { statusCode: 404, message: 'User not found' },
+        { statusCode: 404, message: 'User không tồn tại' },
         HttpStatus.NOT_FOUND
       );
     }
@@ -71,6 +82,7 @@ return {
       content: newComment,
     };
   }
+
 
   // Lấy bình luận theo mã phòng
   findByRoomId = async (maPhong: number, req: Request) => {
@@ -106,7 +118,7 @@ return {
   };
 
   // Update a comment
-  async updateComment(id: number, updateCommentDto: UpdateCommentDto) {
+  updateComment = async (id: number, updateCommentDto: UpdateCommentDto) => {
     // Kiểm tra comment tồn tại
     const existingComment = await this.prisma.comment.findUnique({
       where: { id }
@@ -138,4 +150,24 @@ return {
       content: comment
     };
   }
+
+  // Delete a comment
+  deleteComment = async (id: number) => {
+    const comment = await this.prisma.comment.findUnique({
+      where: { id }
+    });
+
+    if (!comment) {
+      return {
+        statusCode: 404,
+        message: 'Comment not found'
+      };
+    }
+
+    return this.prisma.comment.delete({
+      where: { id }
+    });
+  }
+
+
 }

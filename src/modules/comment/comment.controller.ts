@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Param, ParseIntPipe, Req, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, ParseIntPipe, Req, Put, Delete } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto, UpdateCommentDto } from './dto/comment.dto';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { ApiBearerAuth, ApiOperation, ApiTags, ApiResponse, ApiHeader } from '@nestjs/swagger';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Public } from 'src/common/decorater/public.decorator';
 
 @ApiTags('Comment')
 @Controller('/api/comment')
@@ -23,6 +24,7 @@ export class CommentController {
   }
 
   // Create a new comment
+  @Public()
   @Post('')
   @ApiHeader({
     name: 'accessToken',
@@ -61,5 +63,10 @@ export class CommentController {
   update(@Param('id', ParseIntPipe) id: number, @Body() updateCommentDto: UpdateCommentDto) {
     return this.commentService.updateComment(id, updateCommentDto);
   }
-  
+
+  // Delete a comment
+  @Delete(':id')
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.commentService.deleteComment(id);
+  }
 }

@@ -10,12 +10,14 @@ import { APP_PIPE } from '@nestjs/core';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './modules/auth/jwt.strategy';
 import { PrismaService } from './common/prisma/prisma.service';
+import { BookingModule } from './modules/booking/booking.module';
+import { LocationModule } from './modules/location/location.module';
 
 @Module({
   imports: [
     AuthModule,
-    UsersModule,
     CommentModule,
+    UsersModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -24,6 +26,8 @@ import { PrismaService } from './common/prisma/prisma.service';
       secret: process.env.ACCESS_TOKEN_SECRET,
       signOptions:{expiresIn:`60`}
     }),
+    BookingModule,
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [

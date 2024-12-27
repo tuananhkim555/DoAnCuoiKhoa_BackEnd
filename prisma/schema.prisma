@@ -34,6 +34,7 @@ model User {
   role       Role?     @default(USER)
   avatar   String?
   comments Comment[]
+  bookings Booking[]
   status    Int       @default(1)
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
@@ -59,9 +60,26 @@ model Room {
   name        String    @map("tenPhong")
   description String?   @map("moTa")
   comments    Comment[]
+  bookings    Booking[]
   status      Int       @default(1)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
 
   @@map("Room")
+}
+
+model Booking {
+  id            Int      @id @default(autoincrement())
+  roomId        Int      @map("maPhong")
+  checkIn       DateTime @map("ngayDen")
+  checkOut      DateTime @map("ngayDi")
+  guestCount    Int      @map("soLuongKhach")
+  userId        Int      @map("maNguoiDung")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime? @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room          Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@map("Booking")
 }

@@ -9,7 +9,7 @@ import { ResponseMessage } from 'src/common/decorater/response-message.decorator
 export class AuthController {
   constructor(private authService: AuthService) {}
   
-  
+  // Register
   @ApiBody({
     type:RegisterDto
   })
@@ -22,7 +22,7 @@ export class AuthController {
     return this.authService.register(registerDto);
   }
 
-
+  // Login
   @ApiBody({
     type: LoginDto
   })
