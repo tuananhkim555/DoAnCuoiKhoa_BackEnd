@@ -82,7 +82,7 @@ export class UsersController {
   @ApiQuery({ name: 'pageIndex', description: 'Page number' })
   @ApiQuery({ name: 'pageSize', description: 'Items per page' })
   @ApiQuery({ name: 'keyword', description: 'Search keyword' })
-  @Get('phan-trang-tim-kiem')
+  @Get('search-pagination')
   getPaginatedUsers(@Query() query: UserFilterDto) {
     return this.userService.getPaginatedUsers(query);
   }
@@ -112,9 +112,9 @@ export class UsersController {
   @ApiResponse({
     description: 'Success',
   })
-  @Get('search/:TenNguoiDung')
-  searchUsers(@Param('TenNguoiDung') TenNguoiDung: string) {
-    return this.userService.searchUsers({ name: TenNguoiDung });
+  @Get('search/:name-user')
+  searchUsers(@Param('name-user') name: string) {
+    return this.userService.searchUsers({ name: name });
   }
 
   //Upload avatar local

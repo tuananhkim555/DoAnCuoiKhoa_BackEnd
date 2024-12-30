@@ -7,7 +7,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('AIR TUẤN ANH API')
-    .setDescription('The cats API description')
+    .setDescription('Đồ án cuối khóa backend của ĐINH TUẤN ANH')
     .setVersion('1.0')
     .addBearerAuth(
       {

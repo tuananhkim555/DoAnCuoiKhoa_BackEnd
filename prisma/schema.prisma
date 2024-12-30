@@ -83,3 +83,15 @@ model Booking {
 
   @@map("Booking")
 }
+
+model Location {
+  id        Int      @id @default(autoincrement())
+  name_location      String   @map("tenViTri")
+  province  String   @map("tinhThanh")
+  country   String   @map("quocGia")
+  image     String   @map("hinhAnh")
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("Location")
+}
