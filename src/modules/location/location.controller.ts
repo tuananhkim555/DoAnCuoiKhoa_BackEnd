@@ -5,6 +5,7 @@ import {  ApiBody, ApiConsumes, ApiHeader, ApiQuery, ApiResponse } from '@nestjs
 import { FileInterceptor } from '@nestjs/platform-express';
 import storageCloud from 'src/common/multer/upload-cloud.multer';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import storageLocation from 'src/common/multer/upload-image-location.multer';
 
 
 @Controller('api/location')
@@ -61,21 +62,21 @@ export class LocationController {
         name: 'accessToken',
         required: true,
         description: 'Access token for authentication'
-      })
+    })
     @ApiHeader({
         name: 'maViTri',
         required: true,
         description: 'Mã vị trí cần upload ảnh'
     })
     @ApiResponse({ description: 'Success' })
-    @UseInterceptors(FileInterceptor('avatar', { storage: storageCloud }))
+    @UseInterceptors(FileInterceptor('imageLocation', { storage: storageLocation }))
     @ApiConsumes('multipart/form-data')
     @ApiBody({ type: UploadImageLocationDto })
     async uploadAvatarCloud(
-      @UploadedFile() file: Express.Multer.File,
-      @Headers('maViTri') maViTri: string,
-      @Req() req: any
+        @UploadedFile() file: Express.Multer.File,
+        @Headers('maViTri') maViTri: string,
+        @Req() req: any
     ) {
-      return this.locationService.uploadImageLocation(req.user.id, file);
+        return this.locationService.uploadImageLocation(parseInt(maViTri), file);
     }
 }

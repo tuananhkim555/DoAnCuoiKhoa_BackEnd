@@ -170,6 +170,15 @@ export class LocationService {
 
       // Upload image Location
       uploadImageLocation = async (id: number, file: Express.Multer.File) => {
+        const location = await this.prisma.location.findUnique({
+          where: { id },
+        });
+        if(!location) {
+          return {
+            statusCode: 400,
+            message: ' Mã vị trí không tồn tại'
+          };
+        }
         return await this.prisma.location.update({
           where: { id },
           data: { image: file.filename },

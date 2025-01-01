@@ -58,12 +58,30 @@ model Comment {
 model Room {
   id          Int       @id @default(autoincrement())
   name        String    @map("tenPhong")
+  guestCount  Int       @default(1) @map("khach")
+  bedroom     Int       @default(1) @map("phongNgu")
+  bed         Int       @default(1) @map("giuong")
+  bathroom    Int       @default(1) @map("phongTam")
   description String?   @map("moTa")
+  price       Float     @default(0) @map("giaTien")
+  washer      Boolean   @default(false) @map("mayGiat")
+  iron        Boolean   @default(false) @map("banLa")
+  tv          Boolean   @default(false) @map("tivi")
+  airCon      Boolean   @default(false) @map("dieuHoa")
+  wifi        Boolean   @default(false) @map("wifi")
+  kitchen     Boolean   @default(false) @map("bep")
+  parking     Boolean   @default(false) @map("doXe")
+  pool        Boolean   @default(false) @map("hoBoi")
+  flatIron    Boolean   @default(false) @map("banUi")
+  locationId  Int       @default(1) @map("maViTri")
+  image       String?   @map("hinhAnh")
   comments    Comment[]
   bookings    Booking[]
   status      Int       @default(1)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
+
+  location    Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
 
   @@map("Room")
 }
@@ -90,8 +108,10 @@ model Location {
   province  String   @map("tinhThanh")
   country   String   @map("quocGia")
   image     String   @map("hinhAnh")
+  rooms     Room[]
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
 
   @@map("Location")
 }
+

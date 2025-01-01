@@ -12,6 +12,7 @@ import { JwtStrategy } from './modules/auth/jwt.strategy';
 import { PrismaService } from './common/prisma/prisma.service';
 import { BookingModule } from './modules/booking/booking.module';
 import { LocationModule } from './modules/location/location.module';
+import { RoomsModule } from './modules/rooms/rooms.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { LocationModule } from './modules/location/location.module';
       signOptions:{expiresIn:`60`}
     }),
     BookingModule,
+    RoomsModule,
     LocationModule,
   ],
   controllers: [AppController],
